@@ -29,13 +29,15 @@ st.markdown("""
     section[data-testid="stSidebar"] {
         background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     }
-    section[data-testid="stSidebar"] .stMarkdown h1,
-    section[data-testid="stSidebar"] .stMarkdown h2,
-    section[data-testid="stSidebar"] .stMarkdown h3,
-    section[data-testid="stSidebar"] .stMarkdown p,
-    section[data-testid="stSidebar"] .stMarkdown label,
-    section[data-testid="stSidebar"] .stMarkdown span {
-        color: #e0e0e0 !important;
+    section[data-testid="stSidebar"] h1,
+    section[data-testid="stSidebar"] h2,
+    section[data-testid="stSidebar"] h3,
+    section[data-testid="stSidebar"] p,
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] span,
+    section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] p,
+    section[data-testid="stSidebar"] div[data-testid="stWidgetLabel"] p {
+        color: #ffffff !important;
     }
 
     /* Cards */
@@ -234,34 +236,12 @@ with st.sidebar:
         help="Середньодобова температура для початку охолодження"
     )
 
-    hysteresis = st.slider(
-        "Гістерезис (К)",
-        min_value=0.5, max_value=5.0,
-        value=1.0, step=0.5,
-        help="Різниця температур для запобігання частим перемиканням"
-    )
+    hysteresis = 1.0
+    delay_hours = 6
 
-    delay_hours = st.slider(
-        "Затримка перемикання (год)",
-        min_value=1, max_value=24,
-        value=6, step=1,
-        help="Час безперервного виконання умови для переключення режиму"
-    )
-
-    st.markdown("---")
-
-    # Показуємо похідні пороги
-    st.markdown("### 📊 Похідні пороги")
     t_stop_cool = t_start_cool - hysteresis
     t_start_heat = t_off_heat - hysteresis
 
-    col_p1, col_p2 = st.columns(2)
-    with col_p1:
-        st.metric("Зупинка охол.", f"{t_stop_cool:.1f} °C")
-    with col_p2:
-        st.metric("Старт опал.", f"{t_start_heat:.1f} °C")
-
-    st.markdown("---")
     run_btn = st.button("🚀 Розрахувати", use_container_width=True, type="primary")
 
 
@@ -523,6 +503,7 @@ fig.update_yaxes(
     ticktext=["Очікування", "Опалення", "Охолодження"],
     gridcolor="#e2e8f0",
     range=[-0.3, 2.3],
+    fixedrange=True,
     row=2, col=1
 )
 
@@ -547,9 +528,10 @@ st.plotly_chart(fig, use_container_width=True, config={
 st.markdown('<div class="gradient-divider"></div>', unsafe_allow_html=True)
 
 st.markdown(f"""
-<div style="text-align: center; color: #666; font-size: 0.8rem; padding: 0.5rem 0;">
+<div style="text-align: center; color: #666; font-size: 0.8rem; padding: 0.5rem 0; line-height: 1.6;">
     📍 Київ (50.45°N, 30.52°E) &nbsp;|&nbsp;
     📅 {params['start_date'].strftime('%d.%m.%Y')} — {params['end_date'].strftime('%d.%m.%Y')} &nbsp;|&nbsp;
-    🌐 Дані: <a href="https://open-meteo.com/" target="_blank" style="color: #667eea;">Open-Meteo</a>
+    🌐 Дані: <a href="https://open-meteo.com/" target="_blank" style="color: #667eea;">Open-Meteo</a><br>
+    <span style="font-weight: 600; letter-spacing: 0.05em; color: #888;">© ТЕПЛІ ТЕХНОЛОГІЇ</span>
 </div>
 """, unsafe_allow_html=True)
