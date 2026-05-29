@@ -369,7 +369,7 @@ fig = make_subplots(
     shared_xaxes=True,
     vertical_spacing=0.08,
     row_heights=[0.75, 0.25],
-    subplot_titles=("Температури та режими роботи", "Стейт-машина (режим)")
+    subplot_titles=("Температури та режими роботи", "Активний режим роботи")
 )
 
 # --- Верхній графік: Температури ---
